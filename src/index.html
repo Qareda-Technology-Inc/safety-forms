@@ -1,0 +1,39 @@
+@@include('partials/main.html')
+
+<head>
+    @@include("partials/title-meta.html", {"title": "Starter Page"})
+
+    @@include('partials/head-css.html')
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div class="flex wrapper">
+
+        @@include('partials/sidenav.html')
+
+        <!-- Start Page Content here -->
+        <div class="page-content">
+
+            @@include('partials/topbar.html')
+
+            <main class="flex-grow p-6">
+
+                @@include("partials/page-title.html", {"subtitle":"Menu","title":"Welcome to Safety Form Fill Forum"})
+
+
+            </main>
+
+            @@include('partials/footer.html')
+
+        </div>
+        <!-- End Page content -->
+
+    </div>
+
+    @@include('partials/footer-scripts.html')
+
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+/*
+Template Name: FlexAdmin - Tailwind CSS 3 Admin Layout & UI Kit Template
+Version: 1.0
+Author: MyraStudio
+File: Main Css File
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Components
+@import "custom/reboot";
+@import "custom/helper";
+@import "custom/buttons";
+@import "custom/card";
+@import "custom/forms";
+@import "custom/chart";
+
+// Structure
+@import "structure/sidenav";
+@import "structure/topbar";
+
+// Advanced Plugins
+@import "custom/simplebar";

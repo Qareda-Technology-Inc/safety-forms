@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags, title, and CSS includes -->
+    @@include("partials/title-meta.html", {"title": "Dashboard"})
+    @@include('partials/head-css.html')
+</head>
+
+<body>
+    <div class="flex wrapper">
+        <!-- Sidebar inclusion -->
+        @@include('partials/sidenav.html')
+
+        <!-- Start Page Content here -->
+        <div class="page-content">
+            <!-- Topbar inclusion -->
+            @@include('partials/topbar.html')
+
+            <main class="flex-grow p-6">
+                <!-- Page title inclusion -->
+                @@include("partials/page-title.html", {"subtitle":"Safety Forms","title":"Planned Job Observation"})
+
+                <div class="flex flex-col gap-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title text-3xl text-center text-bold">Planned Job Observation</h4>
+                            <p class="text-sm text-slate-700 mb-4 text-center">FORM NO.: IDP/HSE/F/012 </p>
+                        </div>
+                        <div class="p-6">
+                            <!-- Form starts here -->
+                            <form action="submit-form.php" method="POST">
+
+                                <!-- Job/Task -->
+                                <div>
+                                    <label for="job-task" class="text-gray-800 text-sm font-medium inline-block mb-2">Job/Task</label>
+                                    <input type="text" id="job-task" name="job-task" class="form-input">
+                                </div>
+
+                                <!-- Department -->
+                                <div>
+                                    <label for="department" class="text-gray-800 text-sm font-medium inline-block mb-2">Department</label>
+                                    <select id="department" name="department" class="form-select">
+                                        <option value="">Select Department</option>
+                                        <option value="HR">MINING</option>
+                                        <option value="IT">HSE</option>
+                                        <option value="Finance">MINE PLANNING</option>
+                                        <option value="Operations">OPERATIONS</option>
+                                        <option value="Marketing">GEOLOGY</option>
+                                    </select>
+                                </div>
+
+                                <!-- Name (Person Observing) -->
+                                <div>
+                                    <label for="observer-name" class="text-gray-800 text-sm font-medium inline-block mb-2">Name (Person Observing)</label>
+                                    <input type="text" id="observer-name" name="observer-name" class="form-input">
+                                </div>
+
+                                <!-- Name (Person being Observed) -->
+                                <div>
+                                    <label for="observed-name" class="text-gray-800 text-sm font-medium inline-block mb-2">Name (Person being Observed)</label>
+                                    <input type="text" id="observed-name" name="observed-name" class="form-input">
+                                </div>
+
+                                <!-- Reason(s) for Observation -->
+                                <div class="text-center">
+                                    <label class="mt-5 text-2xl text-center text-bold">REASONS(s) FOR OBSERVATION</label>
+                                    <div class="flex flex-wrap gap-4">
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="NEW WORKER"> New Worker</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="GOOD PERFORMER"> Good Performer</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="POOR PERFORMER"> Poor Performer</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="WORKER WITH KNOWN PROBLEM"> Worker with Known Problem</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="RISK TAKER"> Risk Taker</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="ROUTINE OBSERVATION"> Routine Observation</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT (POLLUTION)"> Incident (Pollution)</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT (INJURY/DAMAGE)"> Incident (Injury/Damage)</label>
+                                    </div>
+                                </div>
+
+                                <!-- Tasks Procedures -->
+                                <div>
+                                    <label for="tasks-procedures" class="text-gray-800 text-sm font-medium inline-block mb-2">Tasks Procedures</label>
+                                    <textarea id="tasks-procedures" name="tasks-procedures" class="form-textarea"></textarea>
+                                </div>
+
+                                <!-- Complaint -->
+                                <div>
+                                    <label for="complaint" class="text-gray-800 text-sm font-medium inline-block mb-2">Complaint</label>
+                                    <textarea id="complaint" name="complaint" class="form-textarea"></textarea>
+                                </div>
+
+                                <!-- Reasons for Deviation -->
+                                <div>
+                                    <label for="reasons-deviation" class="text-gray-800 text-sm font-medium inline-block mb-2">Reasons for Deviation</label>
+                                    <textarea id="reasons-deviation" name="reasons-deviation" class="form-textarea"></textarea>
+                                </div>
+
+                                <!-- EVALUATION -->
+                                <div role="group" aria-labelledby="evaluation-heading" class="evaluation-section text-center">
+                                    <h2 id="evaluation-heading" class="text-bold text-gray-800 font-medium inline-block my-5 text-2xl">EVALUATION</h2>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <!-- Q1 -->
+                                        <div class="evaluation-item">
+                                            <label for="evaluation1">1. Recognized all hazards (health, safety, and environment)</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation1_no" name="evaluation1" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation1_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation1_yes" name="evaluation1" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation1_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment1" name="comment1" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                        
+                                        <!-- Q2 -->
+                                        <div class="evaluation-item">
+                                            <label for="evaluation2">2. Used correct tools</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation2_no" name="evaluation2" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation2_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation2_yes" name="evaluation2" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation2_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment2" name="comment2" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                        
+                                        <!-- Q3 -->
+                                        <div class="evaluation-item">
+                                            <label for="evaluation3">3. Used correct PPE (Personal Protective Equipment)</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation3_no" name="evaluation3" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation3_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation3_yes" name="evaluation3" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation3_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment3" name="comment3" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                        
+                                        <!-- Q4 -->
+                                        <div class="evaluation-item">
+                                            <label for="evaluation4">4. Workplace safe and pollution free</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation4_no" name="evaluation4" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation4_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation4_yes" name="evaluation4" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation4_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment4" name="comment4" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                        
+                                        <!-- Q5 -->
+                                        <div class="evaluation-item">
+                                            <label>5. Health and safety of other workers and the environment considered</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation4_no" name="evaluation4" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation4_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation4_yes" name="evaluation4" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation4_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment4" name="comment4" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                        
+                                        <!-- Q6 -->
+                                        <div class="evaluation-item">
+                                            <label>6. Maintained good housekeeping throughout the task</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation4_no" name="evaluation4" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation4_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation4_yes" name="evaluation4" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation4_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment4" name="comment4" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+
+                                        <!-- Q7 -->
+                                        <div class="evaluation-item">
+                                            <label>7. Safe and logical steps followed</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" id="evaluation4_no" name="evaluation4" value="NO" class="form-checkbox rounded text-danger">
+                                                <label for="evaluation4_no" class="ml-2">No</label>
+                                                <input type="checkbox" id="evaluation4_yes" name="evaluation4" value="YES" class="form-checkbox rounded text-success">
+                                                <label for="evaluation4_yes" class="ml-2">Yes</label>
+                                            </div>
+                                            <textarea id="comment4" name="comment4" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- OBSERVER’S GENERAL COMMENTS -->
+                                <div class="text-center">
+                                    <label for="observer-comments" class="text-bold text-gray-800 font-medium inline-block my-5 text-2xl">OBSERVER’S GENERAL COMMENTS</label>
+                                    <textarea id="observer-comments" name="observer-comments" class="form-textarea" rows="4" placeholder="Enter general comments here"></textarea>
+                                </div>
+
+                                <!-- RECOMMENDATIONS -->
+                                <div>
+                                    <label class="text-gray-800 text-sm font-medium inline-block mb-2">RECOMMENDATIONS</label>
+                                    <div class="grid grid-cols-4 gap-4">
+                                        <!-- Recommendation 1 -->
+                                        <div>
+                                            <label>1. Write new Procedure (WSWP)</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="checkbox" name="recommendation1" value="NO" class="form-checkbox rounded text-danger"> No</label>
+                                            <label><input type="checkbox" name="recommendation1" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" name="person-responsible1" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="signature1" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 2 -->
+                                        <div>
+                                            <label>2. Modify existing procedure (WSWP)</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="checkbox" name="recommendation2" value="NO" class="form-checkbox rounded text-danger"> No</label>
+                                            <label><input type="checkbox" name="recommendation2" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" name="person-responsible2" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="signature2" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 3 -->
+                                        <div>
+                                            <label>3. Repair equipment or tool</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="checkbox" name="recommendation3" value="NO" class="form-checkbox rounded text-danger"> No</label>
+                                            <label><input type="checkbox" name="recommendation3" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" name="person-responsible3" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="signature3" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 4 -->
+                                        <div>
+                                            <labeL>4. Rearrange equipment or workstation</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="checkbox" name="recommendation4" value="NO" class="form-checkbox rounded text-danger"> No</label>
+                                            <label><input type="checkbox" name="recommendation4" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" name="person-responsible4" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="signature4" class="form-input" placeholder="Signature">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- OBSERVATIONS REVIEWED/DISCUSSED WITH WORKER -->
+                                <div class="mt-4">
+                                    <label class="text-gray-800 text-sm font-medium inline-block mb-2">OBSERVATIONS REVIEWED/DISCUSSED WITH WORKER</label>
+                                    <div class="flex gap-4">
+                                        <label><input type="checkbox" name="observations-reviewed" value="YES" class="form-checkbox rounded text-success"> YES</label>
+                                        <label><input type="checkbox" name="observations-reviewed" value="NO" class="form-checkbox rounded text-danger"> NO</label>
+                                    </div>
+                                </div>
+
+                                <!-- SIGNATURES -->
+                                <div class="grid grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label for="observer-signature" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF OBSERVER</label>
+                                        <input type="text" id="observer-signature" name="observer-signature" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label for="observed-signature" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF PERSON BEING OBSERVED</label>
+                                        <input type="text" id="observed-signature" name="observed-signature" class="form-input">
+                                    </div>
+                                </div>
+
+
+                                <!-- Submit button -->
+                                <div class="mt-4">
+                                    <button type="submit" class="btn bg-primary text-white">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!-- end card -->
+                </div>
+
+            </main>
+
+            <!-- Footer inclusion -->
+            @@include('partials/footer.html')
+
+        </div>
+        <!-- End Page content -->
+
+    </div>
+
+    <!-- Footer scripts inclusion -->
+    @@include('partials/footer-scripts.html')
+
+</body>
+
+</html>

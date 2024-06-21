@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Safety Interaction Record</title>
+    <!-- Include CSS files -->
+    @@include('partials/head-css.html')
+    <style>
+        /* Additional CSS for horizontal form layout */
+        .form-row {
+            display: flex;
+            flex-direction: column; /* Display elements in a column */
+            gap: 10px; /* Adjust the gap between form elements */
+            margin-bottom: 10px; /* Optional: Adjust margin bottom as needed */
+        }
+        .form-row label {
+            text-align: left; /* Align labels to the left */
+        }
+        .form-row input[type="text"],
+        .form-row select,
+        .form-row textarea {
+            /* Optionally adjust input styles */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%; /* Ensure input fields take up full width */
+        }
+        .form-row select {
+            /* Optionally adjust select styles */
+            height: 36px; /* Example height */
+        }
+        .form-row textarea {
+            /* Optionally adjust textarea styles */
+            height: 100px; /* Example height */
+        }
+        .form-row .btn {
+            /* Optionally adjust button styles */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex wrapper">
+        @@include('partials/sidenav.html')
+        <div class="page-content">
+            @@include('partials/topbar.html')
+            <main class="flex-grow p-6">
+                @@include("partials/page-title.html", {"subtitle":"Forms","title":"Safety Interaction Record"})
+                <div class="grid lg:grid-cols-2 grid-cols-1 gap-6">
+                    <div class="col-span-2">
+                        <div class="card">
+                            <div class="p-6">
+                                <h4 class="card-title mb-4 text-center text-3xl">Safety Interaction Record</h4>
+                                <p class="text-sm text-slate-700 mb-4 text-center">FORM NO.: IDP/HSE/F/051.</p>
+                                <form>
+                                    <div class="form-row">
+                                        <label for="done-by">Done By:</label>
+                                        <input type="text" id="done-by" name="done-by" class="form-input" placeholder="Name of person...">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="interaction-personnel">Interaction Personnel:</label>
+                                        <input type="text" id="interaction-personnel" name="interaction-personnel" class="form-input" placeholder="Names of personnel...">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="department">Department:</label>
+                                        <select id="department" name="department" class="form-select">
+                                            <option value="">Select Department</option>
+                                            <option value="Mining">Mining</option>
+                                            <option value="HSE">HSE</option>
+                                            <option value="MinePlanning">Mine Planning</option>
+                                            <option value="Operations">Operations</option>
+                                            <option value="Geology">Geology</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="significant-aspects">Significant Aspect Of Observation and Discussion:</label>
+                                        <textarea id="significant-aspects" name="significant-aspects" class="form-textarea"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="issues-concerns">Issues and Concerns:</label>
+                                        <textarea id="issues-concerns" name="issues-concerns" class="form-textarea"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="opportunities">Opportunities for Improvement:</label>
+                                        <textarea id="opportunities" name="opportunities" class="form-textarea"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="improvement-description">Improvement Description:</label>
+                                        <textarea id="improvement-description" name="improvement-description" class="form-textarea"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="improvement-by">Improvement By:</label>
+                                        <input type="text" id="improvement-by" name="improvement-by" class="form-input" placeholder="Name or department...">
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn bg-primary text-white">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+            </main>
+            @@include('partials/footer.html')
+        </div>
+    </div>
+    <!-- Include JavaScript files -->
+    @@include('partials/footer-scripts.html')
+</body>
+</html>

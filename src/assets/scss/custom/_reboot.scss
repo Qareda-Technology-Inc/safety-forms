@@ -1,0 +1,39 @@
+//
+// reboot.scss
+//
+
+html {
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+    @apply antialiased font-base font-normal text-sm leading-normal bg-default-100 text-default-500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-semibold text-gray-800;
+}
+
+code {
+    @apply text-sky-500;
+}
+
+.text-muted {
+    @apply text-gray-400;
+}
+
+.form-input,
+input,
+textarea,
+button,
+select,
+a {
+    -webkit-tap-highlight-color: transparent;
+}

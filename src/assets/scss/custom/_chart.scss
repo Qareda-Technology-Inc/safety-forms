@@ -1,0 +1,35 @@
+
+//
+// _chart.scss
+//
+
+.morris-chart {
+    text {
+        font-family: "Work Sans", sans-serif !important;
+    }
+}
+.morris-hover {
+    position: absolute;
+    z-index: 10;
+
+    &.morris-default-style {
+        font-size: 12px;
+        text-align: center;
+        border-radius: 5px;
+        padding: 10px 12px;
+        font-family: "Work Sans", sans-serif !important;
+        @apply bg-dark text-white;
+
+        .morris-hover-row-label {
+            font-weight: bold;
+            margin: 0.25em 0;
+            font-family: "Work Sans", sans-serif !important;
+        }
+
+        .morris-hover-point {
+            white-space: nowrap;
+            margin: 0.1em 0;
+            color: white;
+        }
+    }
+}

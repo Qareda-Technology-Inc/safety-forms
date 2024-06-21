@@ -1,0 +1,39 @@
+//
+// _sidenav.scss
+//
+
+// Page Content
+.page-content {
+    @apply min-h-screen flex flex-col lg:ps-64 w-full transition-all duration-300;
+}
+
+// Hidden Sidenav View ( Fullscreen page content view)
+html[data-sidebar-view="hidden"] {
+    #app-menu {
+        @apply -ms-64;
+    }
+
+    .page-content {
+        @apply lg:ps-0;
+    }
+}
+
+// Menu Active
+.admin-menu {
+    a.active {
+        @apply text-primary bg-primary/10;
+
+        .material-symbols-rounded {
+            @apply fill-1;
+        }
+    }
+
+
+    .hs-accordion.active>.hs-accordion-toggle.hs-accordion-active\:bg-default-100 {
+        @apply text-primary bg-primary/10;
+    }
+
+    .hs-accordion-content .active {
+        @apply text-primary bg-transparent;
+    }
+}
