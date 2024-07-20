@@ -1,12 +1,13 @@
 {
-    "name": "plug",
+    "name": "SafetyFormsHub",
     "version": "1.0",
-    "description": "Plug - Tailwind CSS 3 Admin Layout & UI Kit Template",
+    "description": "Safety Interaction forms",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev":"gulp"
     },
-    "author": "HKStudio",
+    "author": "JohnCode",
     "private": true,
     "browserslist": [
         "defaults and supports es6-module",

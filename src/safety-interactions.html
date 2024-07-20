@@ -60,18 +60,18 @@
                             <div class="p-6">
                                 <h4 class="card-title mb-4 text-center text-3xl">Safety Interaction Record</h4>
                                 <p class="text-sm text-slate-700 mb-4 text-center">FORM NO.: IDP/HSE/F/051.</p>
-                                <form>
+                                <form id="sirForm">
                                     <div class="form-row">
-                                        <label for="done-by">Done By:</label>
-                                        <input type="text" id="done-by" name="done-by" class="form-input" placeholder="Name of person...">
+                                        <label for="doneBy">Done By:</label>
+                                        <input type="text" id="doneBy" name="doneBy" class="form-input" placeholder="Name of person...">
                                     </div>
                                     <div class="form-row">
-                                        <label for="interaction-personnel">Interaction Personnel:</label>
-                                        <input type="text" id="interaction-personnel" name="interaction-personnel" class="form-input" placeholder="Names of personnel...">
+                                        <label for="interactionPersonnel">Interaction Personnel:</label>
+                                        <input type="text" id="interactionPersonnel" name="interactionPersonnel" class="form-input" placeholder="Names of personnel...">
                                     </div>
                                     <div class="form-row">
-                                        <label for="department">Department:</label>
-                                        <select id="department" name="department" class="form-select">
+                                        <label for="areaDept">Department:</label>
+                                        <select id="areaDept" name="areaDept" class="form-select">
                                             <option value="">Select Department</option>
                                             <option value="Mining">Mining</option>
                                             <option value="HSE">HSE</option>
@@ -81,24 +81,28 @@
                                         </select>
                                     </div>
                                     <div class="form-row">
-                                        <label for="significant-aspects">Significant Aspect Of Observation and Discussion:</label>
-                                        <textarea id="significant-aspects" name="significant-aspects" class="form-textarea"></textarea>
+                                        <label for="significantAspects">Significant Aspect Of Observation and Discussion:</label>
+                                        <textarea id="significantAspects" name="significantAspects" class="form-textarea"></textarea>
                                     </div>
                                     <div class="form-row">
-                                        <label for="issues-concerns">Issues and Concerns:</label>
-                                        <textarea id="issues-concerns" name="issues-concerns" class="form-textarea"></textarea>
+                                        <label for="issuesConcerns">Issues and Concerns:</label>
+                                        <textarea id="issuesConcerns" name="issuesConcerns" class="form-textarea"></textarea>
                                     </div>
                                     <div class="form-row">
-                                        <label for="opportunities">Opportunities for Improvement:</label>
-                                        <textarea id="opportunities" name="opportunities" class="form-textarea"></textarea>
+                                        <label for="opportunitiesForImprovement">Opportunities for Improvement:</label>
+                                        <textarea id="opportunitiesForImprovement" name="opportunitiesForImprovement" class="form-textarea"></textarea>
                                     </div>
                                     <div class="form-row">
-                                        <label for="improvement-description">Improvement Description:</label>
-                                        <textarea id="improvement-description" name="improvement-description" class="form-textarea"></textarea>
+                                        <label for="improvementDescriptions[description]">Improvement Description:</label>
+                                        <textarea id="improvementDescriptions[description]" name="improvementDescriptions[description]" class="form-textarea"></textarea>
                                     </div>
                                     <div class="form-row">
-                                        <label for="improvement-by">Improvement By:</label>
-                                        <input type="text" id="improvement-by" name="improvement-by" class="form-input" placeholder="Name or department...">
+                                        <label for="improvedBy">Improvement By:</label>
+                                        <input type="text" id="improvedBy" name="improvedBy" class="form-input" placeholder="Name or department...">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="date">Date:</label>
+                                        <input type="text" id="date" name="date" class="form-input" placeholder="Enter date...">
                                     </div>
                                     <div class="mt-4">
                                         <button type="submit" class="btn bg-primary text-white">Submit</button>
@@ -116,3 +120,26 @@
     @@include('partials/footer-scripts.html')
 </body>
 </html>
+
+<script>
+document.getElementById('sirForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting via HTTP (default behavior)
+
+    const formData = new FormData(this); // Get form data
+    const url = 'https://mpsserver.onrender.com/api/safety-interaction-records/add-forms';
+
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Handle success (optional)
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Handle error (optional)
+    });
+});
+</script>
