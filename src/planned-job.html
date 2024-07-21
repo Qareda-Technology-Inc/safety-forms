@@ -2,9 +2,42 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Planned Job Observation</title>
     <!-- Meta tags, title, and CSS includes -->
     @@include("partials/title-meta.html", {"title": "Dashboard"})
     @@include('partials/head-css.html')
+    
+    <style>
+    .loading {
+        display: none;
+    }
+    .loading.active {
+        display: block;
+    }
+    .message {
+        display: none;
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    .message.success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .message.error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .form-error {
+        color: #721c24;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    </style>
 </head>
 
 <body>
@@ -14,7 +47,7 @@
 
         <!-- Start Page Content here -->
         <div class="page-content">
-            <!-- Topbar inclusion -->
+            <!-- Top bar inclusion -->
             @@include('partials/topbar.html')
 
             <main class="flex-grow p-6">
@@ -35,6 +68,7 @@
                                 <div>
                                     <label for="job" class="text-gray-800 text-sm font-medium inline-block mb-2">Job/Task</label>
                                     <input type="text" id="job" name="job" class="form-input">
+                                    <div class="form-error" id="jobError"></div>
                                 </div>
 
                                 <!-- Department -->
@@ -48,23 +82,26 @@
                                         <option value="Operations">OPERATIONS</option>
                                         <option value="Marketing">GEOLOGY</option>
                                     </select>
+                                    <div class="form-error" id="departmentError"></div>
                                 </div>
 
                                 <!-- Name (Person Observing) -->
                                 <div>
                                     <label for="personObserving" class="text-gray-800 text-sm font-medium inline-block mb-2">Name (Person Observing)</label>
                                     <input type="text" id="personObserving" name="personObserving" class="form-input">
+                                    <div class="form-error" id="personObservingError"></div>
                                 </div>
 
                                 <!-- Name (Person being Observed) -->
                                 <div>
                                     <label for="personBeingObserved" class="text-gray-800 text-sm font-medium inline-block mb-2">Name (Person being Observed)</label>
                                     <input type="text" id="personBeingObserved" name="personBeingObserved" class="form-input">
+                                    <div class="form-error" id="personBeingObservedError"></div>
                                 </div>
 
                                 <!-- Reason(s) for Observation -->
                                 <div class="text-center">
-                                    <label class="mt-5 text-2xl text-center text-bold">REASONS(s) FOR OBSERVATION</label>
+                                    <label for="reasons" class="mt-5 text-2xl text-center text-bold">REASONS(s) FOR OBSERVATION</label>
                                     <div class="flex flex-wrap gap-4">
                                         <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="NEW WORKER"> New Worker</label>
                                         <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="GOOD PERFORMER"> Good Performer</label>
@@ -72,27 +109,32 @@
                                         <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="WORKER WITH KNOWN PROBLEM"> Worker with Known Problem</label>
                                         <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="RISK TAKER"> Risk Taker</label>
                                         <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="ROUTINE OBSERVATION"> Routine Observation</label>
-                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT (POLLUTION)"> Incident (Pollution)</label>
-                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT (INJURY/DAMAGE)"> Incident (Injury/Damage)</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT(POLLUTION)"> Incident (Pollution)</label>
+                                        <label><input class="form-checkbox rounded text-success" type="checkbox" name="reasons[]" value="INCIDENT(INJURY/DAMAGE)"> Incident (Injury/Damage)</label>
                                     </div>
+                                    <div class="form-error" id="reasonsForObservationError"></div>
+                                    
                                 </div>
 
                                 <!-- Tasks Procedures -->
                                 <div>
                                     <label for="taskProcedures" class="text-gray-800 text-sm font-medium inline-block mb-2">Tasks Procedures</label>
                                     <textarea id="taskProcedures" name="taskProcedures" class="form-textarea"></textarea>
+                                    <div class="form-error" id="taskProceduresError"></div>
                                 </div>
 
                                 <!-- Complaint -->
                                 <div>
-                                    <label for="complaint" class="text-gray-800 text-sm font-medium inline-block mb-2">Complaint</label>
-                                    <textarea id="complaint" name="complaint" class="form-textarea"></textarea>
+                                    <label for="compliant" class="text-gray-800 text-sm font-medium inline-block mb-2">Complaint</label>
+                                    <textarea id="compliant" name="compliant" class="form-textarea"></textarea>
+                                    <div class="form-error" id="compliantError"></div>
                                 </div>
 
                                 <!-- Reasons for Deviation -->
                                 <div>
                                     <label for="reasonsForDeviation" class="text-gray-800 text-sm font-medium inline-block mb-2">Reasons for Deviation</label>
                                     <textarea id="reasonsForDeviation" name="reasonsForDeviation" class="form-textarea"></textarea>
+                                    <div class="form-error" id="reasonsForDeviationError"></div>
                                 </div>
 
                                 <!-- EVALUATION -->
@@ -101,160 +143,209 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                         <!-- Q1 -->
                                         <div class="evaluation-item">
-                                            <label for="evaluation1">1. Recognized all hazards (health, safety, and environment)</label>
+                                            <label for="recognizedHazards">1. Recognized all hazards (health, safety, and environment)</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation1" name="evaluation1" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation1" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation1" name="evaluation1" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation1" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="recognizedHazardsNo" name="evaluation[recognizedHazards][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="recognizedHazardsYes" name="evaluation[recognizedHazards][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment1" name="comment1" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="recognizedHazardsComment" name="evaluation[recognizedHazards][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                         
                                         <!-- Q2 -->
                                         <div class="evaluation-item">
-                                            <label for="evaluation2">2. Used correct tools</label>
+                                            <label for="correctTools">2. Used correct tools</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation2" name="evaluation2" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation2" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation2" name="evaluation2" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation2" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="correctToolsNo" name="evaluation[correctTools][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="correctToolsYes" name="evaluation[correctTools][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment2" name="comment2" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="correctToolsComment" name="evaluation[correctTools][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                         
                                         <!-- Q3 -->
                                         <div class="evaluation-item">
-                                            <label for="evaluation3">3. Used correct PPE (Personal Protective Equipment)</label>
+                                            <label for="correctPPE">3. Used correct PPE (Personal Protective Equipment)</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation3" name="evaluation3" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation3" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation3" name="evaluation3" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation3" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="correctPPENo" name="evaluation[correctPPE][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="correctPPEYes" name="evaluation[correctPPE][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment3" name="comment3" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="correctPPEComment" name="evaluation[correctPPE][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                         
                                         <!-- Q4 -->
                                         <div class="evaluation-item">
-                                            <label for="evaluation4">4. Workplace safe and pollution free</label>
+                                            <label for="workplaceSafe">4. Workplace safe and pollution free</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation4" name="evaluation4" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation4" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation4" name="evaluation4" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation4" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="workplaceSafeNo" name="evaluation[workplaceSafe][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="workplaceSafeYes" name="evaluation[workplaceSafe][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment4" name="comment4" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="workplaceSafeComment" name="evaluation[workplaceSafe][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                         
                                         <!-- Q5 -->
                                         <div class="evaluation-item">
-                                            <label>5. Health and safety of other workers and the environment considered</label>
+                                            <label for="healthSafetyOthers">5. Health and safety of other workers and the environment considered</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation5" name="evaluation5" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation5" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation5" name="evaluation5" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation5" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="healthSafetyOthersNo" name="evaluation[healthSafetyOthers][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="healthSafetyOthersYes" name="evaluation[healthSafetyOthers][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment5" name="comment5" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="healthSafetyOthersComment" name="evaluation[healthSafetyOthers][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                         
                                         <!-- Q6 -->
                                         <div class="evaluation-item">
-                                            <label>6. Maintained good housekeeping throughout the task</label>
+                                            <label for="goodHousekeeping">6. Maintained good housekeeping throughout the task</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation6" name="evaluation6" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation6" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation6" name="evaluation6" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation6" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="goodHousekeepingNo" name="evaluation[goodHousekeeping][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="goodHousekeepingYes" name="evaluation[goodHousekeeping][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment6" name="comment6" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="goodHousekeepingComment" name="evaluation[goodHousekeeping][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
 
                                         <!-- Q7 -->
                                         <div class="evaluation-item">
-                                            <label>7. Safe and logical steps followed</label>
+                                            <label for="safeLogicalSteps">7. Safe and logical steps followed</label>
                                             <div class="flex items-center">
-                                                <input type="checkbox" id="evaluation7" name="evaluation7" value="NO" class="form-checkbox rounded text-danger">
-                                                <label for="evaluation7" class="ml-2">No</label>
-                                                <input type="checkbox" id="evaluation7" name="evaluation7" value="YES" class="form-checkbox rounded text-success">
-                                                <label for="evaluation7" class="ml-2">Yes</label>
+                                                <label><input type="radio" id="safeLogicalStepsNo" name="evaluation[safeLogicalSteps][answer]" value="false" class="form-radio rounded text-danger" required> No</label>
+                                                <label><input type="radio" id="safeLogicalStepsYes" name="evaluation[safeLogicalSteps][answer]" value="true" class="form-radio rounded text-success" required> Yes</label>
                                             </div>
-                                            <textarea id="comment7" name="comment7" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
+                                            <textarea id="safeLogicalStepsComment" name="evaluation[safeLogicalSteps][comment]" class="form-textarea mt-2" placeholder="Enter comment here"></textarea>
                                         </div>
                                     </div>
                                 </div>
 
 
 
+
                                 <!-- OBSERVER’S GENERAL COMMENTS -->
                                 <div class="text-center">
-                                    <label for="observer-comments" class="text-bold text-gray-800 font-medium inline-block my-5 text-2xl">OBSERVER’S GENERAL COMMENTS</label>
-                                    <textarea id="observer-comments" name="observer-comments" class="form-textarea" rows="4" placeholder="Enter general comments here"></textarea>
+                                    <label for="observersGeneralComments" class="text-bold text-gray-800 font-medium inline-block my-5 text-2xl">OBSERVER’S GENERAL COMMENTS</label>
+                                    <textarea id="observersGeneralComments" name="observersGeneralComments" class="form-textarea" rows="4" placeholder="Enter general comments here"></textarea>
+                                    <div class="form-error" id="observersGeneralCommentsError"></div>
                                 </div>
 
                                 <!-- RECOMMENDATIONS -->
                                 <div>
-                                    <label class="text-gray-800 text-sm font-medium inline-block mb-2">RECOMMENDATIONS</label>
+                                    <label for="recommendations" class="text-gray-800 text-sm font-medium inline-block mb-2">RECOMMENDATIONS</label>
                                     <div class="grid grid-cols-4 gap-4">
                                         <!-- Recommendation 1 -->
                                         <div>
-                                            <label>1. Write new Procedure (WSWP)</label>
+                                            <label for="writeNewProcedure">1. Write new Procedure (WSWP)</label>
                                         </div>
                                         <div>
-                                            <label><input type="checkbox" name="recommendation1" value="NO" class="form-checkbox rounded text-danger"> No</label>
-                                            <label><input type="checkbox" name="recommendation1" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                            <label><input type="radio" id="writeNewProcedure" name="recommendations[writeNewProcedure][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="writeNewProcedure" name="recommendations[writeNewProcedure][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
                                         </div>
                                         <div>
-                                            <input type="text" name="person-responsible1" class="form-input" placeholder="Person Responsible">
+                                            <input type="text" id="writeNewProcedurePersonResponsible" name="recommendations[writeNewProcedure][personResponsible]" class="form-input" placeholder="Person Responsible">
                                         </div>
                                         <div>
-                                            <input type="text" name="signature1" class="form-input" placeholder="Signature">
+                                            <input type="text" id="writeNewProcedureSignature" name="recommendations[writeNewProcedure][signature]" class="form-input" placeholder="Signature">
                                         </div>
 
                                         <!-- Recommendation 2 -->
                                         <div>
-                                            <label>2. Modify existing procedure (WSWP)</label>
+                                            <label for="modifyExistingProcedure">2. Modify existing procedure (WSWP)</label>
                                         </div>
                                         <div>
-                                            <label><input type="checkbox" name="recommendation2" value="NO" class="form-checkbox rounded text-danger"> No</label>
-                                            <label><input type="checkbox" name="recommendation2" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                            <label><input type="radio" id="modifyExistingProcedure" name="recommendations[modifyExistingProcedure][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="modifyExistingProcedure" name="recommendations[modifyExistingProcedure][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
                                         </div>
                                         <div>
-                                            <input type="text" name="person-responsible2" class="form-input" placeholder="Person Responsible">
+                                            <input type="text" id="modifyExistingProcedurePersonResponsible" name="recommendations[modifyExistingProcedure][personResponsible]" class="form-input" placeholder="Person Responsible">
                                         </div>
                                         <div>
-                                            <input type="text" name="signature2" class="form-input" placeholder="Signature">
+                                            <input type="text" id="modifyExistingProcedurePersonResponsible" name="recommendations[modifyExistingProcedure][signature]" class="form-input" placeholder="Signature">
                                         </div>
 
                                         <!-- Recommendation 3 -->
                                         <div>
-                                            <label>3. Repair equipment or tool</label>
+                                            <label for="repairEquipment">3. Repair equipment or tool</label>
                                         </div>
                                         <div>
-                                            <label><input type="checkbox" name="recommendation3" value="NO" class="form-checkbox rounded text-danger"> No</label>
-                                            <label><input type="checkbox" name="recommendation3" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                            <label><input type="radio" id="repairEquipment" name="recommendations[repairEquipment][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="repairEquipment" name="recommendations[repairEquipment][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
                                         </div>
                                         <div>
-                                            <input type="text" name="person-responsible3" class="form-input" placeholder="Person Responsible">
+                                            <input type="text" id="repairEquipmentPersonResponsible" name="recommendations[repairEquipment][personResponsible]" class="form-input" placeholder="Person Responsible">
                                         </div>
                                         <div>
-                                            <input type="text" name="signature3" class="form-input" placeholder="Signature">
+                                            <input type="text" id="repairEquipmentPersonResponsible" name="recommendations[repairEquipment][signature]" class="form-input" placeholder="Signature">
                                         </div>
 
                                         <!-- Recommendation 4 -->
                                         <div>
-                                            <labeL>4. Rearrange equipment or workstation</label>
+                                            <labeL for="rearrangeEquipment">4. Rearrange equipment or workstation</label>
                                         </div>
                                         <div>
-                                            <label><input type="checkbox" name="recommendation4" value="NO" class="form-checkbox rounded text-danger"> No</label>
-                                            <label><input type="checkbox" name="recommendation4" value="YES" class="form-checkbox rounded text-success"> Yes</label>
+                                            <label><input type="radio" id="rearrangeEquipment" name="recommendations[rearrangeEquipment][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="rearrangeEquipment" name="recommendations[rearrangeEquipment][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
                                         </div>
                                         <div>
-                                            <input type="text" name="person-responsible4" class="form-input" placeholder="Person Responsible">
+                                            <input type="text" id="rearrangeEquipmentPersonResponsible" name="recommendations[rearrangeEquipment][personResponsible]" class="form-input" placeholder="Person Responsible">
                                         </div>
                                         <div>
-                                            <input type="text" name="signature4" class="form-input" placeholder="Signature">
+                                            <input type="text" id="rearrangeEquipmentPersonResponsible" name="recommendations[rearrangeEquipment][signature]" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 5 -->
+                                        <div>
+                                            <labeL for="modifyHSERule">5. Introduce/modify health, safety, and environment rule</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="radio" id="modifyHSERule" name="recommendations[modifyHSERule][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="modifyHSERule" name="recommendations[modifyHSERule][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" id="modifyHSERulePersonResponsible" name="recommendations[modifyHSERule][personResponsible]" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="modifyHSERulePersonresponsible" name="recommendations[modifyHSERule][signature]" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 6 -->
+                                        <div>
+                                            <labeL for="modifyHSERule">5. Retrain or induct worker</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="radio" id="retrainWorker" name="recommendations[retrainWorker][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="retrainWorker" name="recommendations[retrainWorker][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" id="retrainWorkerPersonResponsible" name="recommendations[retrainWorker][personResponsible]" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="retrainWorkerPersonResponsible" name="recommendations[retrainWorker][signature]" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 7 -->
+                                        <div>
+                                            <labeL for="modifyHSERule">7. Do ergonomic survey (study)
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label><input type="radio" id="ergonomicSurvey" name="recommendations[ergonomicSurvey][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="ergonomicSurvey" name="recommendations[ergonomicSurvey][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" id="ergonomicSurveyPersonResponsible" name="recommendations[ergonomicSurvey][personResponsible]" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="ergonomicSurveyPersonResponsible" name="recommendations[ergonomicSurvey][signature]" class="form-input" placeholder="Signature">
+                                        </div>
+
+                                        <!-- Recommendation 8 -->
+                                        <div>
+                                            <labeL for="modifyHSERule">8. Relocate worker to another task</label>
+                                        </div>
+                                        <div>
+                                            <label><input type="radio" id="relocateWorker" name="recommendations[relocateWorker][answer]" value="false" class="form-radio rounded text-danger"> No</label>
+                                            <label><input type="radio" id="relocateWorker" name="recommendations[relocateWorker][answer]" value="true" class="form-radio rounded text-success"> Yes</label>
+                                        </div>
+                                        <div>
+                                            <input type="text" id="relocateWorkerPersonResponsible" name="recommendations[relocateWorker][personResponsible]" class="form-input" placeholder="Person Responsible">
+                                        </div>
+                                        <div>
+                                            <input type="text" id="relocateWorkerPersonResponsible" name="recommendations[relocateWorker][signature]" class="form-input" placeholder="Signature">
                                         </div>
                                     </div>
                                 </div>
@@ -262,29 +353,53 @@
 
                                 <!-- OBSERVATIONS REVIEWED/DISCUSSED WITH WORKER -->
                                 <div class="mt-4">
-                                    <label class="text-gray-800 text-sm font-medium inline-block mb-2">OBSERVATIONS REVIEWED/DISCUSSED WITH WORKER</label>
+                                    <label for="observationsReviewed class="text-gray-800 text-sm font-medium inline-block mb-2">OBSERVATIONS REVIEWED/DISCUSSED WITH WORKER</label>
                                     <div class="flex gap-4">
-                                        <label><input type="checkbox" name="observations-reviewed" value="YES" class="form-checkbox rounded text-success"> YES</label>
-                                        <label><input type="checkbox" name="observations-reviewed" value="NO" class="form-checkbox rounded text-danger"> NO</label>
+                                        <label><input type="radio" id="observationsReviewed" name="observationsReviewed" value="true" class="form-radio rounded text-success"> YES</label>
+                                        <label><input type="radio" id="observationsReviewed" name="observationsReviewed" value="false" class="form-radio rounded text-danger"> NO</label>
+                                        <div class="form-error" id="observationsReviewedError"></div>
                                     </div>
                                 </div>
 
                                 <!-- SIGNATURES -->
                                 <div class="grid grid-cols-2 gap-4 mt-4">
                                     <div>
-                                        <label for="observer-signature" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF OBSERVER</label>
-                                        <input type="text" id="observer-signature" name="observer-signature" class="form-input">
+                                        <label for="signatureObserver" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF OBSERVER</label>
+                                        <input type="text" id="signatureObserver" name="signatureObserver" class="form-input">
+                                        <div class="form-error" id="signatureObserverError"></div>
                                     </div>
                                     <div>
-                                        <label for="observed-signature" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF PERSON BEING OBSERVED</label>
-                                        <input type="text" id="observed-signature" name="observed-signature" class="form-input">
+                                        <label for="signatureObserved" class="text-gray-800 text-sm font-medium inline-block mb-2">SIGNATURE OF PERSON BEING OBSERVED</label>
+                                        <input type="text" id="signatureObserved" name="signatureObserved" class="form-input">
+                                        <div class="form-error" id="signatureObservedError"></div>
                                     </div>
+                                </div>
+
+                                 <!-- Form Status -->
+                                 <div>
+                                    <label for="status" class="text-gray-800 text-sm font-medium inline-block mb-2">What is the for Status?</label>
+                                    <select id="status" name="status" class="form-select">
+                                        <option value="">Select form Status</option>
+                                        <option value="COMPLETED">COMPLETED</option>
+                                        <option value="NOT COMPLETED">NOT COMPLETED</option>
+                                    </select>
+                                    <div class="form-error" id="statusError"></div>
                                 </div>
 
 
                                 <!-- Submit button -->
                                 <div class="mt-4">
                                     <button type="submit" class="btn bg-primary text-white">Submit</button>
+                                </div>
+
+                                <div class="loading" id="loadingIndicator">
+                                    Submitting...
+                                </div>
+                                <div class="message success" id="successMessage">
+                                    Form submitted successfully!
+                                </div>
+                                <div class="message error" id="errorMessage">
+                                    An error occurred. Please try again.
                                 </div>
                             </form>
                         </div>
@@ -304,6 +419,123 @@
     <!-- Footer scripts inclusion -->
     @@include('partials/footer-scripts.html')
 
+    <script>
+        function validateForm() {
+            let isValid = true;
+    
+            // Clear previous errors
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+    
+            // Validate required fields
+            const requiredFields = [
+                { id: 'job', errorId: 'jobError' },
+                { id: 'signatureObserved', errorId: 'signatureObservedError' },
+                { id: 'signatureObserver', errorId: 'signatureObserverError' },
+                { id: 'department', errorId: 'departmentError' },
+                { id: 'observersGeneralComments', errorId: 'observersGeneralCommentsError' },
+                { id: 'reasonsForDeviation', errorId: 'reasonsForDeviationError' },
+                { id: 'observationsReviewed', errorId: 'observationsReviewedError' }
+            ];
+    
+            requiredFields.forEach(field => {
+                const value = document.getElementById(field.id).value.trim();
+                if (!value) {
+                    document.getElementById(field.errorId).textContent = 'This field is required.';
+                    isValid = false;
+                }
+            });
+    
+            // Validate checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="reasons[]"]');
+            const reasons = [...checkboxes].filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+            if (reasons.length === 0) {
+                document.getElementById('reasonsError').textContent = 'At least one reason must be selected.';
+                isValid = false;
+            }
+    
+            return { isValid, reasons };
+        }
+    
+        document.getElementById('pjoForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting via HTTP (default behavior)
+    
+            const { isValid, reasons } = validateForm();
+            if (!isValid) {
+                return; // Stop form submission if validation fails
+            }
+    
+            document.getElementById('loadingIndicator').classList.add('active');
+    
+            const formData = new FormData(this);
+            const object = {};
+    
+            formData.forEach((value, key) => {
+                if (key.includes('[')) {
+                    // Handle nested fields
+                    const keys = key.split(/[\[\]\.]+/).filter(k => k);
+                    keys.reduce((obj, k, i) => {
+                        if (i === keys.length - 1) {
+                            if (['answer'].includes(k)) {
+                                obj[k] = value === 'true'; // Convert to Boolean
+                            } else {
+                                obj[k] = value; // Keep as String
+                            }
+                        } else {
+                            obj[k] = obj[k] || {};
+                        }
+                        return obj[k];
+                    }, object);
+                } else {
+                    // Handle top-level fields
+                    if (['answer'].includes(key)) {
+                        object[key] = value === 'true'; // Convert to Boolean
+                    } else {
+                        object[key] = value; // Keep as String
+                    }
+                }
+            });
+    
+            // Add reasons to the object
+            object['reasons'] = reasons;
+    
+            // Log the final object to check its structure
+            console.log('Form Data Object:', JSON.stringify(object));
+    
+            const url = 'http://localhost:7854/api/planned-job-observation/add-form';
+    
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(JSON.stringify(err));
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('loadingIndicator').classList.remove('active');
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('pjoForm').reset();
+            })
+            .catch(error => {
+                document.getElementById('loadingIndicator').classList.remove('active');
+                document.getElementById('errorMessage').style.display = 'block';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    
+    
+    
+
 </body>
 
 </html>
+
+
