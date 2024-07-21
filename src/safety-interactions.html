@@ -7,36 +7,31 @@
     <!-- Include CSS files -->
     @@include('partials/head-css.html')
     <style>
-        /* Additional CSS for horizontal form layout */
         .form-row {
             display: flex;
-            flex-direction: column; /* Display elements in a column */
-            gap: 10px; /* Adjust the gap between form elements */
-            margin-bottom: 10px; /* Optional: Adjust margin bottom as needed */
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
         }
         .form-row label {
-            text-align: left; /* Align labels to the left */
+            text-align: left;
         }
         .form-row input[type="text"],
         .form-row select,
         .form-row textarea {
-            /* Optionally adjust input styles */
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
-            width: 100%; /* Ensure input fields take up full width */
+            width: 100%;
         }
         .form-row select {
-            /* Optionally adjust select styles */
-            height: 36px; /* Example height */
+            height: 36px;
         }
         .form-row textarea {
-            /* Optionally adjust textarea styles */
-            height: 100px; /* Example height */
+            height: 100px;
         }
         .form-row .btn {
-            /* Optionally adjust button styles */
             padding: 10px 20px;
             background-color: #007bff;
             color: #fff;
@@ -44,6 +39,47 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+        }
+        .improvement-description {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .improvement-description > div {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 768px) {
+            .improvement-description {
+                grid-template-columns: 1fr;
+            }
+        }
+        .loading {
+            display: none;
+        }
+        .loading.active {
+            display: block;
+        }
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message.success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .message.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .form-error {
+            color: #721c24;
+            font-size: 12px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -64,10 +100,12 @@
                                     <div class="form-row">
                                         <label for="doneBy">Done By:</label>
                                         <input type="text" id="doneBy" name="doneBy" class="form-input" placeholder="Name of person...">
+                                        <div class="form-error" id="doneByError"></div>
                                     </div>
                                     <div class="form-row">
                                         <label for="interactionPersonnel">Interaction Personnel:</label>
                                         <input type="text" id="interactionPersonnel" name="interactionPersonnel" class="form-input" placeholder="Names of personnel...">
+                                        <div class="form-error" id="interactionPersonnelError"></div>
                                     </div>
                                     <div class="form-row">
                                         <label for="areaDept">Department:</label>
@@ -79,33 +117,56 @@
                                             <option value="Operations">Operations</option>
                                             <option value="Geology">Geology</option>
                                         </select>
+                                        <div class="form-error" id="areaDeptError"></div>
                                     </div>
                                     <div class="form-row">
                                         <label for="significantAspects">Significant Aspect Of Observation and Discussion:</label>
                                         <textarea id="significantAspects" name="significantAspects" class="form-textarea"></textarea>
+                                        <div class="form-error" id="significantAspectsError"></div>
                                     </div>
                                     <div class="form-row">
                                         <label for="issuesConcerns">Issues and Concerns:</label>
                                         <textarea id="issuesConcerns" name="issuesConcerns" class="form-textarea"></textarea>
+                                        <div class="form-error" id="issuesConcernsError"></div>
                                     </div>
                                     <div class="form-row">
                                         <label for="opportunitiesForImprovement">Opportunities for Improvement:</label>
                                         <textarea id="opportunitiesForImprovement" name="opportunitiesForImprovement" class="form-textarea"></textarea>
+                                        <div class="form-error" id="opportunitiesForImprovementError"></div>
+                                    </div>
+                                    <div id="improvementDescriptionsContainer">
+                                        <div class="form-row improvement-description grid grid-cols-4 gap-4">
+                                            <div>
+                                                <label for="improvementDescriptions[0][description]">Improvement Description:</label>
+                                                <textarea name="improvementDescriptions[0][description]" class="form-textarea"></textarea>
+                                                <div class="form-error" id="descriptionError"></div>
+                                            </div>
+                                            <div>
+                                                <label for="improvementDescriptions[0][by]">By:</label>
+                                                <input type="text" name="improvementDescriptions[0][by]" class="form-input" placeholder="Name...">
+                                                <div class="form-error" id="byError"></div>
+                                            </div>
+                                            <div>
+                                                <label for="improvementDescriptions[0][date]">Date:</label>
+                                                <input type="date" name="improvementDescriptions[0][date]" class="form-input">
+                                                <div class="form-error" id="dateError"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-row">
-                                        <label for="improvementDescriptions[description]">Improvement Description:</label>
-                                        <textarea id="improvementDescriptions[description]" name="improvementDescriptions[description]" class="form-textarea"></textarea>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="improvedBy">Improvement By:</label>
-                                        <input type="text" id="improvedBy" name="improvedBy" class="form-input" placeholder="Name or department...">
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="date">Date:</label>
-                                        <input type="text" id="date" name="date" class="form-input" placeholder="Enter date...">
+                                        <button type="button" class="btn bg-secondary text-white" onclick="addImprovementDescription()">Add Improvement Description</button>
                                     </div>
                                     <div class="mt-4">
                                         <button type="submit" class="btn bg-primary text-white">Submit</button>
+                                    </div>
+                                    <div class="loading" id="loadingIndicator">
+                                        Submitting...
+                                    </div>
+                                    <div class="message success" id="successMessage">
+                                        Form submitted successfully!
+                                    </div>
+                                    <div class="message error" id="errorMessage">
+                                        An error occurred. Please try again.
                                     </div>
                                 </form>
                             </div>
@@ -118,28 +179,162 @@
     </div>
     <!-- Include JavaScript files -->
     @@include('partials/footer-scripts.html')
+    <script>
+        let improvementDescriptionIndex = 1;
+
+        function addImprovementDescription() {
+            const container = document.getElementById('improvementDescriptionsContainer');
+            const newFieldset = document.createElement('div');
+            newFieldset.className = 'form-row improvement-description grid grid-cols-4 gap-4';
+            newFieldset.innerHTML = `
+                <div>
+                    <label for="improvementDescriptions[${improvementDescriptionIndex}][description]">Improvement Description:</label>
+                    <textarea name="improvementDescriptions[${improvementDescriptionIndex}][description]" class="form-textarea"></textarea>
+                    <div class="form-error" id="descriptionError${improvementDescriptionIndex}"></div>
+                </div>
+                <div>
+                    <label for="improvementDescriptions[${improvementDescriptionIndex}][by]">By:</label>
+                    <input type="text" name="improvementDescriptions[${improvementDescriptionIndex}][by]" class="form-input" placeholder="Name...">
+                    <div class="form-error" id="byError${improvementDescriptionIndex}"></div>
+                </div>
+                <div>
+                    <label for="improvementDescriptions[${improvementDescriptionIndex}][date]">Date:</label>
+                    <input type="date" name="improvementDescriptions[${improvementDescriptionIndex}][date]" class="form-input">
+                    <div class="form-error" id="dateError${improvementDescriptionIndex}"></div>
+                </div>
+            `;
+            container.appendChild(newFieldset);
+            improvementDescriptionIndex++;
+        }
+
+        function validateForm() {
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+
+            // Validate required fields
+            const doneBy = document.getElementById('doneBy').value.trim();
+            const interactionPersonnel = document.getElementById('interactionPersonnel').value.trim();
+            const areaDept = document.getElementById('areaDept').value;
+            const significantAspects = document.getElementById('significantAspects').value.trim();
+            const issuesConcerns = document.getElementById('issuesConcerns').value.trim();
+            const opportunitiesForImprovement = document.getElementById('opportunitiesForImprovement').value.trim();
+
+            if (!doneBy) {
+                document.getElementById('doneByError').textContent = 'This field is required.';
+                isValid = false;
+            }
+            if (!interactionPersonnel) {
+                document.getElementById('interactionPersonnelError').textContent = 'This field is required.';
+                isValid = false;
+            }
+            if (!areaDept) {
+                document.getElementById('areaDeptError').textContent = 'Please select a department.';
+                isValid = false;
+            }
+            if (!significantAspects) {
+                document.getElementById('significantAspectsError').textContent = 'This field is required.';
+                isValid = false;
+            }
+            if (!issuesConcerns) {
+                document.getElementById('issuesConcernsError').textContent = 'This field is required.';
+                isValid = false;
+            }
+            if (!opportunitiesForImprovement) {
+                document.getElementById('opportunitiesForImprovementError').textContent = 'This field is required.';
+                isValid = false;
+            }
+
+            // Validate improvement descriptions
+            document.querySelectorAll('[name^="improvementDescriptions"]').forEach((field, index) => {
+                const description = document.querySelector(`[name="improvementDescriptions[${index}][description]"]`).value.trim();
+                const by = document.querySelector(`[name="improvementDescriptions[${index}][by]"]`).value.trim();
+                const date = document.querySelector(`[name="improvementDescriptions[${index}][date]"]`).value.trim();
+
+                if (!description) {
+                    document.getElementById(`descriptionError${index}`).textContent = 'This field is required.';
+                    isValid = false;
+                }
+                if (!by) {
+                    document.getElementById(`byError${index}`).textContent = 'This field is required.';
+                    isValid = false;
+                }
+                if (!date) {
+                    document.getElementById(`dateError${index}`).textContent = 'This field is required.';
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        document.getElementById('sirForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting via HTTP (default behavior)
+
+            if (!validateForm()) {
+                return; // Stop form submission if validation fails
+            }
+
+            document.getElementById('loadingIndicator').classList.add('active');
+
+            const formData = new FormData(this);
+            const object = {};
+            formData.forEach((value, key) => {
+                if (key.includes('[')) {
+                    const keys = key.split(/[\[\]]/).filter(k => k);
+                    keys.reduce((obj, k, i) => {
+                        if (i === keys.length - 1) {
+                            if (!obj[k]) obj[k] = [];
+                            obj[k].push(value);
+                        } else {
+                            if (!obj[k]) obj[k] = isNaN(keys[i + 1]) ? {} : [];
+                        }
+                        return obj[k];
+                    }, object);
+                } else {
+                    object[key] = value;
+                }
+            });
+
+            const url = 'http://localhost:7854/api/safety-interaction-records/add-forms';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingIndicator').classList.remove('active');
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('sirForm').reset();
+                document.getElementById('improvementDescriptionsContainer').innerHTML = `
+                    <div class="form-row improvement-description grid grid-cols-4 gap-4">
+                        <div>
+                            <label for="improvementDescriptions[0][description]">Improvement Description:</label>
+                            <textarea name="improvementDescriptions[0][description]" class="form-textarea"></textarea>
+                        </div>
+                        <div>
+                            <label for="improvementDescriptions[0][by]">By:</label>
+                            <input type="text" name="improvementDescriptions[0][by]" class="form-input" placeholder="Name...">
+                        </div>
+                        <div>
+                            <label for="improvementDescriptions[0][date]">Date:</label>
+                            <input type="date" name="improvementDescriptions[0][date]" class="form-input">
+                        </div>
+                    </div>
+                `;
+                improvementDescriptionIndex = 1;
+            })
+            .catch(error => {
+                document.getElementById('loadingIndicator').classList.remove('active');
+                document.getElementById('errorMessage').style.display = 'block';
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>
-
-<script>
-document.getElementById('sirForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting via HTTP (default behavior)
-
-    const formData = new FormData(this); // Get form data
-    const url = 'https://mpsserver.onrender.com/api/safety-interaction-records/add-forms';
-
-    fetch(url, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        // Handle success (optional)
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        // Handle error (optional)
-    });
-});
-</script>
