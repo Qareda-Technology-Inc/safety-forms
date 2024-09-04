@@ -246,14 +246,14 @@
 
             // Validate improvement descriptions
             document.querySelectorAll('[name^="improvementDescriptions"]').forEach((field, index) => {
-                const description = document.querySelector(`[name="improvementDescriptions[${index}][description]"]`).value.trim();
+                // const description = document.querySelector(`[name="improvementDescriptions[${index}][description]"]`).value.trim();
                 const by = document.querySelector(`[name="improvementDescriptions[${index}][by]"]`).value.trim();
                 const date = document.querySelector(`[name="improvementDescriptions[${index}][date]"]`).value.trim();
 
-                if (!description) {
-                    document.getElementById(`descriptionError${index}`).textContent = 'This field is required.';
-                    isValid = false;
-                }
+                // if (!description) {
+                //     document.getElementById(`descriptionError${index}`).textContent = 'This field is required.';
+                //     isValid = false;
+                // }
                 if (!by) {
                     document.getElementById(`byError${index}`).textContent = 'This field is required.';
                     isValid = false;
