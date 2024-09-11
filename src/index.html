@@ -1,28 +1,45 @@
-@@include('partials/main.html')
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Work Order AAIL</title>
     @@include("partials/title-meta.html", {"title": "Starter Page"})
-
     @@include('partials/head-css.html')
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+    <style>
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 
 <body>
-
     <!-- Begin page -->
     <div class="flex wrapper">
-
         @@include('partials/sidenav.html')
 
         <!-- Start Page Content here -->
         <div class="page-content">
-
             @@include('partials/topbar.html')
 
             <main class="flex-grow p-6">
-                
-
                 <!-- @@include("partials/page-title.html", {"subtitle":"Menu","title":"Welcome to Safety Forms Hub"}) -->
 
                 <!-- Add highlighted words -->
@@ -30,21 +47,25 @@
                     <p>This platform provides an efficient way to manage <span class="highlight">Safety Work Orders</span> to ensure all tasks are completed with <span class="highlight">accuracy</span> and <span class="highlight">safety</span>. Whether you're handling routine inspections or addressing urgent issues, our <span class="highlight">Safety Form Fill Forum</span> is designed to streamline the process.</p>
                 </div>
                 
+                <!-- Button to Forms Page -->
+                <div class="mt-4">
+                    <a href="/planned-job.html" class="btn">Planned Job Observation</a>
+                </div>
+                <div class="mt-4">
+                    <a href="/safety-interactions.html" class="btn">Safety Interaction Record</a>
+                </div>
+
                 <div>
                     <!-- <img alt="ping" src="assets/images/s3.jpg"/> -->
                 </div>
-
             </main>
 
             @@include('partials/footer.html')
-
         </div>
         <!-- End Page content -->
-
     </div>
 
     @@include('partials/footer-scripts.html')
-
 </body>
 
 </html>
