@@ -54,11 +54,23 @@
                 grid-template-columns: 1fr;
             }
         }
-        .loading {
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
         }
-        .loading.active {
-            display: block;
+        .loading-popup {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
         }
         .message {
             display: none;
@@ -157,8 +169,12 @@
                                     <div class="mt-4">
                                         <button type="submit" class="btn bg-primary text-white">Submit</button>
                                     </div>
-                                    <div class="loading" id="loadingIndicator">
-                                        Submitting...
+                                    <div class="loading-overlay" id="loadingOverlay">
+                                        <div class="loading-popup">
+                                            <div id="loadingIndicator">
+                                                Submitting...
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="message success" id="successMessage">
                                         Form submitted successfully!
@@ -177,6 +193,7 @@
     </div>
     <!-- Include JavaScript files -->
     @@include('partials/footer-scripts.html')
+   
     <script>
         let improvementDescriptionIndex = 1;
 
@@ -244,94 +261,52 @@
                 isValid = false;
             }
 
-            // Validate improvement descriptions
-            document.querySelectorAll('[name^="improvementDescriptions"]').forEach((field, index) => {
-                // const description = document.querySelector(`[name="improvementDescriptions[${index}][description]"]`).value.trim();
-                const by = document.querySelector(`[name="improvementDescriptions[${index}][by]"]`).value.trim();
-                const date = document.querySelector(`[name="improvementDescriptions[${index}][date]"]`).value.trim();
-
-                // if (!description) {
-                //     document.getElementById(`descriptionError${index}`).textContent = 'This field is required.';
-                //     isValid = false;
-                // }
-                if (!by) {
-                    document.getElementById(`byError${index}`).textContent = 'This field is required.';
-                    isValid = false;
-                }
-                if (!date) {
-                    document.getElementById(`dateError${index}`).textContent = 'This field is required.';
-                    isValid = false;
-                }
-            });
-
             return isValid;
         }
 
-        document.getElementById('sirForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting via HTTP (default behavior)
-
+        document.getElementById('sirForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
             if (!validateForm()) {
-                return; // Stop form submission if validation fails
+                return;
             }
 
-            document.getElementById('loadingIndicator').classList.add('active');
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
 
             const formData = new FormData(this);
-            const object = {};
+            const data = {};
             formData.forEach((value, key) => {
-                if (key.includes('[')) {
-                    const keys = key.split(/[\[\]]/).filter(k => k);
-                    keys.reduce((obj, k, i) => {
-                        if (i === keys.length - 1) {
-                            if (!obj[k]) obj[k] = [];
-                            obj[k].push(value);
-                        } else {
-                            if (!obj[k]) obj[k] = isNaN(keys[i + 1]) ? {} : [];
-                        }
-                        return obj[k];
-                    }, object);
+                if (key.includes('improvementDescriptions')) {
+                    const match = key.match(/improvementDescriptions\[(\d+)\]\[(\w+)\]/);
+                    if (match) {
+                        const [, index, field] = match;
+                        if (!data.improvementDescriptions) data.improvementDescriptions = [];
+                        if (!data.improvementDescriptions[index]) data.improvementDescriptions[index] = {};
+                        data.improvementDescriptions[index][field] = value;
+                    }
                 } else {
-                    object[key] = value;
+                    data[key] = value;
                 }
             });
 
-            const url = 'https://mpsserver.onrender.com/api/safety-interaction-records/add-forms';
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('loadingIndicator').classList.remove('active');
+            try {
+                const response = await fetch('https://mpsserver.onrender.com/api/safety-interaction-records/add-forms', { // AAIL Forms API
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error('Network response was not ok.');
                 document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('sirForm').reset();
-                document.getElementById('improvementDescriptionsContainer').innerHTML = `
-                    <div class="form-row improvement-description grid grid-cols-4 gap-4">
-                        <div>
-                            <label for="improvementDescriptions[0][description]">Improvement Description:</label>
-                            <textarea name="improvementDescriptions[0][description]" class="form-textarea"></textarea>
-                        </div>
-                        <div>
-                            <label for="improvementDescriptions[0][by]">By:</label>
-                            <input type="text" name="improvementDescriptions[0][by]" class="form-input" placeholder="Name...">
-                        </div>
-                        <div>
-                            <label for="improvementDescriptions[0][date]">Date:</label>
-                            <input type="date" name="improvementDescriptions[0][date]" class="form-input">
-                        </div>
-                    </div>
-                `;
-                improvementDescriptionIndex = 1;
-            })
-            .catch(error => {
-                document.getElementById('loadingIndicator').classList.remove('active');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000); // Redirect after 2 seconds
+            } catch (error) {
+                console.error('Form submission error:', error);
                 document.getElementById('errorMessage').style.display = 'block';
-                console.error('Error:', error);
-            });
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
         });
     </script>
 </body>
